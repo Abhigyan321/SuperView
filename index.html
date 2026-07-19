@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aurora AI Interview Simulator</title>
+
+<!-- External Libraries -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hark@1.2.0/hark.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<!-- Tailwind Config -->
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
+        dark: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif']
+      }
+    }
+  }
+};
+</script>
+
+<!-- Global Styles -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #020617;
+  color: #f1f5f9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+
+/* Glassmorphism */
+.glass {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+.glass-strong {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+.glass-light {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Animated Gradient Background */
+.animated-gradient {
+  background: linear-gradient(135deg, #020617 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #020617 100%);
+  background-size: 400% 400%;
+  animation: gradient-flow 15s ease infinite;
+}
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Glow Effects */
+.glow-indigo { box-shadow: 0 0 40px rgba(99, 102, 241, 0.5); }
+.glow-purple { box-shadow: 0 0 40px rgba(192, 132, 252, 0.5); }
+.text-glow { text-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+
+/* Pulse Ring */
+.pulse-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(99, 102, 241, 0.6);
+  animation: pulse-ring 2s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Waveform */
+.waveform-bar {
+  display: inline-block;
+  width: 3px;
+  margin: 0 1px;
+  background: linear-gradient(180deg, #818cf8, #c084fc);
+  border-radius: 2px;
+  transition: height 0.1s ease;
+}
+
+/* Float Animation */
+.float { animation: float 6s ease-in-out infinite; }
+.float-delay-1 { animation: float 6s ease-in-out infinite; animation-delay: 1s; }
+.float-delay-2 { animation: float 6s ease-in-out infinite; animation-delay: 2s; }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Pulse Soft */
+.pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Shimmer */
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Recording Dot */
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(99, 102, 241, 0.2);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Step Indicator */
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  background: rgba(15, 23, 42, 0.6);
+}
+.step-circle.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+}
+.step-circle.completed {
+  background: #10b981;
+  border-color: transparent;
+}
+
+/* Card Hover */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+/* Selection Card */
+.selection-card {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.selection-card.selected {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+}
+.selection-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: #6366f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Range Slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 5px;
+  height: 8px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+}
+
+/* Button Primary */
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover::before { left: 100%; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  background: rgba(99, 102, 241, 0.1);
+  color: #c7d2fe;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  cursor: pointer;
+}
+.btn-secondary:hover { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; }
+
+/* Video Container */
+.video-container {
+  position: relative;
+  background: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+/* Avatar Container */
+.avatar-container {
+  position: relative;
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-container.speaking {
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+  border-color: #6366f1;
+}
+
+/* Transcript */
+.transcript-area {
+  scroll-behavior: smooth;
+}
+.transcript-message {
+  animation: message-in 0.4s ease-out;
+}
+@keyframes message-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 6px;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+}
+
+/* Loading Screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #020617;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.5s ease;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: #6366f1;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Page transitions */
+.page {
+  display: none;
+  animation: page-in 0.6s ease-out;
+}
+.page.active { display: block; }
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-backdrop.active { display: flex; }
+
+/* Tooltip */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #c7d2fe;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  margin-bottom: 6px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .video-grid { grid-template-columns: 1fr !important; }
+  .sidebar { display: none; }
+  .mobile-menu-btn { display: block !important; }
+}
+
+/* Tab active */
+.tab-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+/* Hide scrollbar for chat */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="relative">
+    <div class="spinner mx-auto"></div>
+    <div class="mt-6 text-2xl font-bold gradient-text">Aurora AI</div>
+    <div class="text-sm text-slate-400 mt-2" id="loadingText">Initializing Interview Engine...</div>
+  </div>
+</div>
+
+<!-- Three.js Canvas Background -->
+<canvas id="bgCanvas" class="fixed inset-0 w-full h-full -z-10"></canvas>
+
+<!-- Main App Container -->
+<div id="app" class="relative min-h-screen">
+
+  <!-- ============ NAVIGATION BAR ============ -->
+  <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 glass-strong opacity-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-2 cursor-pointer" onclick="App.goTo('landing')">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center glow-indigo">
+            <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xl font-bold gradient-text">Aurora</span>
+        </div>
+        
+        <!-- Nav Links -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-sm text-slate-300 hover:text-white transition">Features</a>
+          <a href="#how-it-works" class="text-sm text-slate-300 hover:text-white transition">How it Works</a>
+          <a href="#testimonials" class="text-sm text-slate-300 hover:text-white transition">Reviews</a>
+          <a href="#pricing" class="text-sm text-slate-300 hover:text-white transition">Pricing</a>
+        </div>
+        
+        <!-- Auth Buttons -->
+        <div class="flex items-center gap-3">
+          <button id="authBtn" class="btn-secondary text-sm py-2 px-4">Sign In</button>
+          <button onclick="App.goTo('setup')" class="btn-primary text-sm py-2 px-4 hidden sm:block">Start Free</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ LANDING PAGE ============ -->
+  <section id="landingPage" class="page active">
+    <!-- Hero Section -->
+    <div class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+      <!-- Floating Cards Decoration -->
+      <div class="absolute top-32 left-8 float glass-light rounded-2xl p-4 w-48 hidden lg:block" style="z-index: 1;">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-500"></div>
+          <div>
+            <div class="text-xs font-semibold">Sarah M.</div>
+            <div class="text-xs text-slate-400">Score: 94%</div>
+          </div>
+        </div>
+        <div class="text-xs text-slate-300">"Landed my dream job at Google!"</div>
+      </div>
+      
+      <div class="absolute top-48 right-12 float-delay-1 glass-light rounded-2xl p-4 w-52 hidden lg:block" style="z-index: 1;">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-slate-300">Confidence</span>
+          <span class="text-xs font-bold text-green-400">98%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:98%"></div></div>
+        <div class="text-xs text-slate-400 mt-2">Live AI Feedback</div>
+      </div>
+      
+      <div class="absolute bottom-32 left-16 float-delay-2 glass-light rounded-2xl p-4 w-44 hidden lg:block" style="z-index: 1;">
+        <div class="text-xs text-slate-300 mb-1">Question 5/10</div>
+        <div class="text-sm font-semibold mb-2">Technical Round</div>
+        <div class="flex gap-1">
+          <div class="w-2 h-8 bg-indigo-500 rounded"></div>
+          <div class="w-2 h-6 bg-indigo-400 rounded"></div>
+          <div class="w-2 h-10 bg-indigo-500 rounded"></div>
+          <div class="w-2 h-4 bg-indigo-300 rounded"></div>
+          <div class="w-2 h-8 bg-indigo-500 rounded"></div>
+        </div>
+      </div>
+      
+      <div class="absolute bottom-48 right-20 float glass-light rounded-2xl p-4 w-40 hidden lg:block" style="z-index: 1;">
+        <div class="text-xs text-slate-400">Grammar Score</div>
+        <div class="text-2xl font-bold gradient-text">A+</div>
+        <div class="text-xs text-green-400">↑ 12% improvement</div>
+      </div>
+      
+      <!-- Hero Content -->
+      <div class="relative z-10 max-w-6xl mx-auto px-4 text-center">
+        <!-- Logo Animation -->
+        <div id="heroLogo" class="mb-6 opacity-0">
+          <div class="inline-flex items-center gap-3 px-4 py-2 glass-light rounded-full">
+            <div class="recording-dot"></div>
+            <span class="text-sm font-medium text-slate-300">AI-Powered Interview Practice</span>
+            <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+          </div>
+        </div>
+        
+        <!-- Title -->
+        <h1 id="heroTitle" class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 opacity-0">
+          <span class="block">Master Your</span>
+          <span class="block gradient-text">Next Interview</span>
+        </h1>
+        
+        <!-- Subtitle with Typed.js -->
+        <div id="heroSubtitle" class="text-lg sm:text-xl md:text-2xl text-slate-300 mb-4 h-8 opacity-0">
+          <span id="typedText"></span>
+        </div>
+        
+        <p id="heroDesc" class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl mx-auto opacity-0">
+          Practice with our AI interviewer that thinks, speaks, and analyzes like a real one. Get instant feedback, ace your interview.
+        </p>
+        
+        <!-- CTA Buttons -->
+        <div id="heroCta" class="flex flex-col sm:flex-row gap-4 justify-center mb-12 opacity-0">
+          <button onclick="App.goTo('setup')" class="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
+            <span>Start Interview Now</span>
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </button>
+          <button onclick="App.playDemo()" class="btn-secondary text-lg px-8 py-4 flex items-center justify-center gap-2">
+            <i data-lucide="play-circle" class="w-5 h-5"></i>
+            <span>Watch Demo</span>
+          </button>
+        </div>
+        
+        <!-- Stats -->
+        <div id="heroStats" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto opacity-0">
+          <div class="glass rounded-2xl p-4">
+            <div class="text-3xl font-bold gradient-text">50K+</div>
+            <div class="text-sm text-slate-400">Active Users</div>
+          </div>
+          <div class="glass rounded-2xl p-4">
+            <div class="text-3xl font-bold gradient-text">95%</div>
+            <div class="text-sm text-slate-400">Success Rate</div>
+          </div>
+          <div class="glass rounded-2xl p-4">
+            <div class="text-3xl font-bold gradient-text">12+</div>
+            <div class="text-sm text-slate-400">Interview Types</div>
+          </div>
+          <div class="glass rounded-2xl p-4">
+            <div class="text-3xl font-bold gradient-text">4.9★</div>
+            <div class="text-sm text-slate-400">User Rating</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Scroll Indicator -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0" id="scrollIndicator">
+        <div class="flex flex-col items-center gap-2 text-slate-400">
+          <span class="text-xs">Scroll to explore</span>
+          <div class="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center pt-2">
+            <div class="w-1 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div id="features" class="py-20 px-4 relative">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 feature-anim">
+          <div class="inline-block px-4 py-1 glass-light rounded-full text-sm text-indigo-300 mb-4">Features</div>
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">Everything You Need to <span class="gradient-text">Succeed</span></h2>
+          <p class="text-slate-400 max-w-2xl mx-auto">Powered by cutting-edge AI to deliver the most realistic interview experience possible.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Feature 1 -->
+          <div class="feature-anim glass rounded-3xl p-8 card-hover">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-4 glow-indigo">
+              <i data-lucide="mic" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Voice Conversation</h3>
+            <p class="text-slate-400 text-sm">Natural voice interaction with our AI interviewer powered by advanced speech recognition.</p>
+          </div>
+          
+          <!-- Feature 2 -->
+          <div class="feature-anim glass rounded-3xl p-8 card-hover">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mb-4 glow-purple">
+              <i data-lucide="video" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Video Analysis</h3>
+            <p class="text-slate-400 text-sm">Real-time facial analysis, eye contact tracking, and emotion detection.</p>
+          </div>
+          
+          <!-- Feature 3 -->
+          <div class="feature-anim glass rounded-3xl p-8 card-hover">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-4 glow-indigo">
+              <i data-lucide="file-text" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Resume Parser</h3>
+            <p class="text-slate-400 text-sm">Upload your resume and get personalized questions tailored to your experience.</p>
+          </div>
+          
+          <!-- Feature 4 -->
+          <div class="feature-anim glass rounded-3xl p-8 card-hover">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4 glow-purple">
+              <i data-lucide="brain" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Smart Feedback</h3>
+            <p class="text-slate-400 text-sm">Detailed AI analysis of your communication, grammar, and confidence levels.</p>
+          </div>
+          
+          <!-- Feature 5 -->
+          <div class="feature-anim glass rounded-3xl p-8 card-hover">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4 glow-indigo">
+              <i data-lucide="users" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Multiple Avatars</h3>
+            <p class="text-slate-400 text-sm">Choose from diverse interviewer personalities to match your target industry.</p>
+          </div>
+          
+          <!-- Feature 6 -->
+          <div class="feature-anim glass rounded-3xl p-8 card-hover">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center mb-4 glow-purple">
+              <i data-lucide="bar-chart-3" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Detailed Reports</h3>
+            <p class="text-slate-400 text-sm">Comprehensive performance reports with actionable improvement suggestions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- How it Works -->
+    <div id="how-it-works" class="py-20 px-4 relative">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <div class="inline-block px-4 py-1 glass-light rounded-full text-sm text-indigo-300 mb-4">Process</div>
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">How It <span class="gradient-text">Works</span></h2>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="glass rounded-2xl p-6 text-center relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold">1</div>
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4 mt-4">
+              <i data-lucide="settings" class="w-8 h-8 text-indigo-400"></i>
+            </div>
+            <h3 class="font-bold mb-2">Setup</h3>
+            <p class="text-sm text-slate-400">Choose your interview type and difficulty</p>
+          </div>
+          
+          <div class="glass rounded-2xl p-6 text-center relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold">2</div>
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-purple-500/20 flex items-center justify-center mb-4 mt-4">
+              <i data-lucide="message-square" class="w-8 h-8 text-purple-400"></i>
+            </div>
+            <h3 class="font-bold mb-2">Practice</h3>
+            <p class="text-sm text-slate-400">Engage in realistic interview conversation</p>
+          </div>
+          
+          <div class="glass rounded-2xl p-6 text-center relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold">3</div>
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-pink-500/20 flex items-center justify-center mb-4 mt-4">
+              <i data-lucide="activity" class="w-8 h-8 text-pink-400"></i>
+            </div>
+            <h3 class="font-bold mb-2">Analyze</h3>
+            <p class="text-sm text-slate-400">Get real-time feedback on performance</p>
+          </div>
+          
+          <div class="glass rounded-2xl p-6 text-center relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold">4</div>
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-4 mt-4">
+              <i data-lucide="trophy" class="w-8 h-8 text-emerald-400"></i>
+            </div>
+            <h3 class="font-bold mb-2">Improve</h3>
+            <p class="text-sm text-slate-400">Review reports and master interviews</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Testimonials -->
+    <div id="testimonials" class="py-20 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <div class="inline-block px-4 py-1 glass-light rounded-full text-sm text-indigo-300 mb-4">Testimonials</div>
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">Loved by <span class="gradient-text">Thousands</span></h2>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center gap-1 mb-3">
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+            </div>
+            <p class="text-slate-300 mb-4">"This AI interviewer is incredible! It felt like a real interview. I got the job at Microsoft after just 3 practice sessions."</p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500"></div>
+              <div>
+                <div class="font-semibold text-sm">Alex Chen</div>
+                <div class="text-xs text-slate-400">Software Engineer @ Microsoft</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center gap-1 mb-3">
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+            </div>
+            <p class="text-slate-300 mb-4">"The facial analysis and feedback helped me fix my nervous habits. My confidence has skyrocketed!"</p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500"></div>
+              <div>
+                <div class="font-semibold text-sm">Priya Sharma</div>
+                <div class="text-xs text-slate-400">Product Manager @ Amazon</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <div class="flex items-center gap-1 mb-3">
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+            </div>
+            <p class="text-slate-300 mb-4">"Best interview prep tool I've used. The detailed reports are pure gold for improvement."</p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500"></div>
+              <div>
+                <div class="font-semibold text-sm">Marcus Johnson</div>
+                <div class="text-xs text-slate-400">Data Scientist @ Google</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pricing -->
+    <div id="pricing" class="py-20 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <div class="inline-block px-4 py-1 glass-light rounded-full text-sm text-indigo-300 mb-4">Pricing</div>
+          <h2 class="text-4xl md:text-5xl font-bold mb-4">Simple, <span class="gradient-text">Transparent</span></h2>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <!-- Free -->
+          <div class="glass rounded-3xl p-8">
+            <h3 class="text-2xl font-bold mb-2">Free</h3>
+            <div class="text-4xl font-bold mb-4">$0<span class="text-lg text-slate-400">/mo</span></div>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>3 interviews/month</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Basic avatars</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Standard reports</li>
+            </ul>
+            <button onclick="App.goTo('setup')" class="btn-secondary w-full">Get Started</button>
+          </div>
+          
+          <!-- Pro -->
+          <div class="glass rounded-3xl p-8 relative border-indigo-500 border-2 glow-indigo">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full text-xs font-bold">MOST POPULAR</div>
+            <h3 class="text-2xl font-bold mb-2">Pro</h3>
+            <div class="text-4xl font-bold mb-4 gradient-text">$19<span class="text-lg text-slate-400">/mo</span></div>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Unlimited interviews</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>All avatars</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Advanced analytics</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Resume parsing</li>
+            </ul>
+            <button onclick="App.goTo('setup')" class="btn-primary w-full">Start Pro</button>
+          </div>
+          
+          <!-- Enterprise -->
+          <div class="glass rounded-3xl p-8">
+            <h3 class="text-2xl font-bold mb-2">Enterprise</h3>
+            <div class="text-4xl font-bold mb-4">$49<span class="text-lg text-slate-400">/mo</span></div>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Everything in Pro</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Custom avatars</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>API access</li>
+              <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Priority support</li>
+            </ul>
+            <button class="btn-secondary w-full">Contact Sales</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="py-12 px-4 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+              </div>
+              <span class="font-bold gradient-text">Aurora AI</span>
+            </div>
+            <p class="text-sm text-slate-400">Master every interview with AI-powered practice.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3 text-sm">Product</h4>
+            <ul class="space-y-2 text-sm text-slate-400">
+              <li>Features</li>
+              <li>Pricing</li>
+              <li>API</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3 text-sm">Company</h4>
+            <ul class="space-y-2 text-sm text-slate-400">
+              <li>About</li>
+              <li>Blog</li>
+              <li>Careers</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-3 text-sm">Legal</h4>
+            <ul class="space-y-2 text-sm text-slate-400">
+              <li>Privacy</li>
+              <li>Terms</li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-center text-sm text-slate-400 pt-8 border-t border-slate-800">
+          © 2024 Aurora AI. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ============ SETUP PAGE ============ -->
+  <section id="setupPage" class="page">
+    <div class="min-h-screen pt-24 pb-12 px-4">
+      <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <h1 class="text-3xl md:text-4xl font-bold mb-2">Setup Your <span class="gradient-text">Interview</span></h1>
+          <p class="text-slate-400">Configure your practice session in 7 simple steps</p>
+        </div>
+        
+        <!-- Step Indicator -->
+        <div class="flex items-center justify-center gap-2 mb-8 overflow-x-auto pb-2">
+          <div class="step-circle active" data-step="1">1</div>
+          <div class="w-8 h-0.5 bg-slate-700"></div>
+          <div class="step-circle" data-step="2">2</div>
+          <div class="w-8 h-0.5 bg-slate-700"></div>
+          <div class="step-circle" data-step="3">3</div>
+          <div class="w-8 h-0.5 bg-slate-700"></div>
+          <div class="step-circle" data-step="4">4</div>
+          <div class="w-8 h-0.5 bg-slate-700"></div>
+          <div class="step-circle" data-step="5">5</div>
+          <div class="w-8 h-0.5 bg-slate-700"></div>
+          <div class="step-circle" data-step="6">6</div>
+          <div class="w-8 h-0.5 bg-slate-700"></div>
+          <div class="step-circle" data-step="7">7</div>
+        </div>
+        
+        <!-- Setup Card -->
+        <div class="glass rounded-3xl p-6 md:p-10">
+          <!-- Step 1: Interview Type -->
+          <div id="step1" class="setup-step">
+            <h2 class="text-2xl font-bold mb-2">Choose Interview Type</h2>
+            <p class="text-slate-400 mb-6">Select the type of interview you want to practice</p>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="typeGrid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          
+          <!-- Step 2: Difficulty -->
+          <div id="step2" class="setup-step hidden">
+            <h2 class="text-2xl font-bold mb-2">Select Difficulty</h2>
+            <p class="text-slate-400 mb-6">How challenging should the interview be?</p>
+            <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4" id="difficultyGrid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          
+          <!-- Step 3: Personality -->
+          <div id="step3" class="setup-step hidden">
+            <h2 class="text-2xl font-bold mb-2">Interviewer Personality</h2>
+            <p class="text-slate-400 mb-6">Choose the type of interviewer you'd like to face</p>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="personalityGrid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          
+          <!-- Step 4: Avatar -->
+          <div id="step4" class="setup-step hidden">
+            <h2 class="text-2xl font-bold mb-2">Select Avatar</h2>
+            <p class="text-slate-400 mb-6">Pick your interviewer</p>
+            <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4" id="avatarGrid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          
+          <!-- Step 5: Voice -->
+          <div id="step5" class="setup-step hidden">
+            <h2 class="text-2xl font-bold mb-2">Voice Settings</h2>
+            <p class="text-slate-400 mb-6">Configure the interviewer's voice</p>
+            <div class="space-y-6">
+              <div>
+                <label class="text-sm font-semibold mb-3 block">Voice Type</label>
+                <div class="grid sm:grid-cols-3 gap-3" id="voiceTypeGrid"></div>
+              </div>
+              <div>
+                <label class="text-sm font-semibold mb-3 block">Accent</label>
+                <div class="grid sm:grid-cols-3 gap-3" id="accentGrid"></div>
+              </div>
+              <div>
+                <label class="text-sm font-semibold mb-3 block">Speed: <span id="speedValue">1x</span></label>
+                <input type="range" min="0.5" max="2" step="0.1" value="1" class="w-full" id="speedRange" />
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                  <span>Slow</span><span>Normal</span><span>Fast</span>
+                </div>
+              </div>
+              <button onclick="App.testVoice()" class="btn-secondary flex items-center gap-2">
+                <i data-lucide="volume-2" class="w-4 h-4"></i> Test Voice
+              </button>
+            </div>
+          </div>
+          
+          <!-- Step 6: Duration -->
+          <div id="step6" class="setup-step hidden">
+            <h2 class="text-2xl font-bold mb-2">Duration</h2>
+            <p class="text-slate-400 mb-6">How long should the interview be?</p>
+            <div class="grid sm:grid-cols-4 md:grid-cols-7 gap-3 mb-6" id="durationGrid"></div>
+            <div>
+              <label class="text-sm font-semibold mb-2 block">Or custom (minutes):</label>
+              <input type="number" id="customDuration" min="1" max="120" placeholder="e.g. 25" class="w-full glass rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
+          
+          <!-- Step 7: Upload -->
+          <div id="step7" class="setup-step hidden">
+            <h2 class="text-2xl font-bold mb-2">Upload Documents (Optional)</h2>
+            <p class="text-slate-400 mb-6">Add your resume and job description for personalized questions</p>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Resume -->
+              <div>
+                <label class="text-sm font-semibold mb-2 block">Resume / CV</label>
+                <div class="glass-light rounded-2xl p-6 border-2 border-dashed border-slate-600 hover:border-indigo-500 transition cursor-pointer" onclick="document.getElementById('resumeInput').click()">
+                  <input type="file" id="resumeInput" accept=".pdf,.docx,.txt" class="hidden" onchange="App.handleFileUpload('resume', this.files[0])" />
+                  <div class="text-center">
+                    <i data-lucide="file-text" class="w-10 h-10 mx-auto mb-2 text-indigo-400"></i>
+                    <div class="text-sm font-semibold" id="resumeFileName">Click to upload</div>
+                    <div class="text-xs text-slate-400 mt-1">PDF, DOCX, TXT</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Job Description -->
+              <div>
+                <label class="text-sm font-semibold mb-2 block">Job Description</label>
+                <div class="glass-light rounded-2xl p-6 border-2 border-dashed border-slate-600 hover:border-indigo-500 transition cursor-pointer" onclick="document.getElementById('jdInput').click()">
+                  <input type="file" id="jdInput" accept=".pdf,.docx,.txt" class="hidden" onchange="App.handleFileUpload('jd', this.files[0])" />
+                  <div class="text-center">
+                    <i data-lucide="briefcase" class="w-10 h-10 mx-auto mb-2 text-purple-400"></i>
+                    <div class="text-sm font-semibold" id="jdFileName">Click to upload</div>
+                    <div class="text-xs text-slate-400 mt-1">PDF, DOCX, TXT</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <label class="text-sm font-semibold mb-2 block">Or paste text directly:</label>
+              <textarea id="customText" rows="4" placeholder="Paste resume or job description text here..." class="w-full glass rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"></textarea>
+            </div>
+          </div>
+          
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between mt-8 pt-6 border-t border-slate-700">
+            <button id="prevBtn" onclick="App.prevStep()" class="btn-secondary flex items-center gap-2 hidden">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+            </button>
+            <div class="ml-auto flex gap-3">
+              <button id="nextBtn" onclick="App.nextStep()" class="btn-primary flex items-center gap-2">
+                Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+              <button id="startBtn" onclick="App.startInterview()" class="btn-primary flex items-center gap-2 hidden">
+                <i data-lucide="play" class="w-4 h-4"></i> Start Interview
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INTERVIEW PAGE ============ -->
+  <section id="interviewPage" class="page">
+    <div class="min-h-screen pt-20 pb-4 px-4">
+      <!-- Top Bar -->
+      <div class="glass-strong rounded-2xl px-4 py-3 mb-4 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+          <span class="text-sm font-semibold">Live Interview</span>
+          <span class="text-xs text-slate-400" id="interviewType">Technical</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <div class="text-center">
+            <div class="text-xs text-slate-400">Time</div>
+            <div class="text-lg font-bold text-indigo-300" id="timerDisplay">00:00</div>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-slate-400">Question</div>
+            <div class="text-lg font-bold text-indigo-300"><span id="questionNum">1</span>/<span id="totalQuestions">10</span></div>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-slate-400">Score</div>
+            <div class="text-lg font-bold text-green-400" id="liveScore">--</div>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <button onclick="App.togglePause()" class="p-2 glass-light rounded-lg hover:bg-slate-700" data-tooltip="Pause">
+            <i data-lucide="pause" class="w-4 h-4"></i>
+          </button>
+          <button onclick="App.endInterview()" class="px-3 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 text-sm font-semibold">
+            End Interview
+          </button>
+        </div>
+      </div>
+      
+      <!-- Main Grid -->
+      <div class="grid lg:grid-cols-4 gap-4">
+        <!-- Main Video Area -->
+        <div class="lg:col-span-3 space-y-4">
+          <!-- Videos Grid -->
+          <div class="grid md:grid-cols-2 gap-4 video-grid">
+            <!-- AI Interviewer -->
+            <div class="avatar-container aspect-video" id="aiAvatar">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="relative mx-auto mb-3">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-4xl font-bold" id="aiAvatarIcon">👨‍💼</div>
+                    <div class="absolute inset-0 rounded-full pulse-ring" id="aiPulse" style="display:none"></div>
+                  </div>
+                  <div class="text-sm font-semibold" id="aiName">AI Interviewer</div>
+                  <div class="text-xs text-slate-300" id="aiStatus">Ready</div>
+                </div>
+              </div>
+              <!-- Avatar overlay info -->
+              <div class="absolute top-3 left-3 glass-light rounded-lg px-2 py-1 text-xs flex items-center gap-2">
+                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                <span id="aiNameTop">AI Interviewer</span>
+              </div>
+              <!-- Speaking indicator -->
+              <div class="absolute bottom-3 left-3 right-3 flex justify-center gap-1" id="aiWaveform">
+                <!-- Waveform bars -->
+              </div>
+            </div>
+            
+            <!-- User Webcam -->
+            <div class="video-container aspect-video">
+              <video id="userVideo" autoplay muted playsinline></video>
+              <div class="absolute top-3 left-3 glass-light rounded-lg px-2 py-1 text-xs flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>You</span>
+              </div>
+              <div class="absolute bottom-3 right-3 glass-light rounded-lg px-2 py-1 text-xs" id="eyeContactIndicator">
+                <span class="text-yellow-400">●</span> Eye Contact: <span id="eyeContactValue">--%</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Transcript Area -->
+          <div class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold flex items-center gap-2">
+                <i data-lucide="message-square" class="w-4 h-4 text-indigo-400"></i>
+                Live Transcript
+              </h3>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="recording-dot"></span>
+                <span class="text-slate-400">Recording</span>
+              </div>
+            </div>
+            <div id="transcriptArea" class="transcript-area h-48 overflow-y-auto hide-scrollbar space-y-2 pr-2">
+              <div class="text-center text-slate-500 text-sm py-8">
+                Interview transcript will appear here...
+              </div>
+            </div>
+          </div>
+          
+          <!-- Controls -->
+          <div class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-center gap-3 flex-wrap">
+              <button onclick="App.toggleMic()" id="micBtn" class="w-12 h-12 rounded-full glass-light hover:bg-slate-700 flex items-center justify-center" data-tooltip="Microphone">
+                <i data-lucide="mic" class="w-5 h-5"></i>
+              </button>
+              <button onclick="App.toggleCamera()" id="camBtn" class="w-12 h-12 rounded-full glass-light hover:bg-slate-700 flex items-center justify-center" data-tooltip="Camera">
+                <i data-lucide="video" class="w-5 h-5"></i>
+              </button>
+              <button onclick="App.skipQuestion()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Skip Question">
+                Skip <i data-lucide="skip-forward" class="w-4 h-4 inline"></i>
+              </button>
+              <button onclick="App.repeatQuestion()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Repeat">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 inline"></i> Repeat
+              </button>
+              <button onclick="App.toggleTextInput()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Type Answer">
+                <i data-lucide="keyboard" class="w-4 h-4 inline"></i> Type
+              </button>
+              <button onclick="App.endInterview()" class="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center" data-tooltip="End Interview">
+                <i data-lucide="phone-off" class="w-5 h-5"></i>
+              </button>
+            </div>
+            
+            <!-- Text Input (Hidden) -->
+            <div id="textInputArea" class="hidden mt-3 flex gap-2">
+              <input type="text" id="textAnswerInput" placeholder="Type your answer..." class="flex-1 glass rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <button onclick="App.sendTextAnswer()" class="btn-primary">Send</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Sidebar Stats -->
+        <div class="lg:col-span-1 sidebar space-y-3">
+          <!-- Confidence -->
+          <div class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-semibold flex items-center gap-1">
+                <i data-lucide="smile" class="w-4 h-4 text-yellow-400"></i>
+                Confidence
+              </span>
+              <span class="text-sm font-bold text-green-400" id="confidenceVal">--%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="confidenceBar" style="width:0%"></div></div>
+          </div>
+          
+          <!-- Speech Speed -->
+          <div class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-semibold flex items-center gap-1">
+                <i data-lucide="gauge" class="w-4 h-4 text-cyan-400"></i>
+                Speech Speed
+              </span>
+              <span class="text-sm font-bold text-cyan-300" id="speedVal">-- WPM</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="speedBar" style="width:0%; background: linear-gradient(90deg, #06b6d4, #3b82f6)"></div></div>
+          </div>
+          
+          <!-- Grammar -->
+          <div class="glass rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-semibold flex items-center gap-1">
+                <i data-lucide="book-open" class="w-4 h-4 text-pink-400"></i>
+                Grammar
+              </span>
+              <span class="text-sm font-bold text-pink-300" id="grammarVal">--%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="grammarBar" style="width:0%; background: linear-gradient(90deg, #ec4899, #f43f5e)"></div></div>
+          </div>
+          
+          <!-- Emotion -->
+          <div class="glass rounded-2xl p-4">
+            <div class="text-sm font-semibold mb-3 flex items-center gap-1">
+              <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
+              Emotion
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs" id="emotionGrid">
+              <div class="text-center p-2 glass-light rounded-lg">
+                <div class="text-base" id="emotionHappy">😊</div>
+                <div class="text-slate-400">Happy</div>
+                <div id="emotionHappyVal" class="font-bold">0%</div>
+              </div>
+              <div class="text-center p-2 glass-light rounded-lg">
+                <div class="text-base">😐</div>
+                <div class="text-slate-400">Neutral</div>
+                <div id="emotionNeutralVal" class="font-bold">0%</div>
+              </div>
+              <div class="text-center p-2 glass-light rounded-lg">
+                <div class="text-base">😮</div>
+                <div class="text-slate-400">Surprised</div>
+                <div id="emotionSurprisedVal" class="font-bold">0%</div>
+              </div>
+              <div class="text-center p-2 glass-light rounded-lg">
+                <div class="text-base">😟</div>
+                <div class="text-slate-400">Confused</div>
+                <div id="emotionSadVal" class="font-bold">0%</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Overall Score -->
+          <div class="glass rounded-2xl p-4 bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
+            <div class="text-sm font-semibold mb-1">Overall Score</div>
+            <div class="text-4xl font-bold gradient-text" id="overallScore">--</div>
+            <div class="text-xs text-slate-400 mt-1">Live Assessment</div>
+          </div>
+          
+          <!-- Status Indicators -->
+          <div class="glass rounded-2xl p-3 space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1"><i data-lucide="mic" class="w-3 h-3"></i> Microphone</span>
+              <span class="text-green-400" id="micStatus">● Active</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1"><i data-lucide="video" class="w-3 h-3"></i> Camera</span>
+              <span class="text-green-400" id="camStatus">● Active</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1"><i data-lucide="circle" class="w-3 h-3"></i> Recording</span>
+              <span class="text-red-400">● On</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1"><i data-lucide="wifi" class="w-3 h-3"></i> Network</span>
+              <span class="text-green-400">● Good</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT PAGE ============ -->
+  <section id="reportPage" class="page">
+    <div class="min-h-screen pt-24 pb-12 px-4">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 mb-4 glow-indigo">
+            <i data-lucide="trophy" class="w-10 h-10 text-white"></i>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold mb-2">Interview <span class="gradient-text">Complete!</span></h1>
+          <p class="text-slate-400">Here's your detailed performance report</p>
+        </div>
+        
+        <!-- Overall Score Card -->
+        <div class="glass rounded-3xl p-8 mb-6 bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+          <div class="grid md:grid-cols-3 gap-6 items-center">
+            <div class="text-center">
+              <div class="text-6xl font-black gradient-text" id="finalScore">85</div>
+              <div class="text-slate-400 text-sm">Overall Score</div>
+            </div>
+            <div class="md:col-span-2">
+              <canvas id="scoreRadar" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Detailed Scores Grid -->
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="bar-chart" class="w-5 h-5 text-indigo-400"></i>
+              Performance Breakdown
+            </h3>
+            <canvas id="performanceBar" height="250"></canvas>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="trending-up" class="w-5 h-5 text-green-400"></i>
+              Progress Over Time
+            </h3>
+            <canvas id="progressLine" height="250"></canvas>
+          </div>
+        </div>
+        
+        <!-- Feedback Sections -->
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2 text-green-400">
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+              Strengths
+            </h3>
+            <ul id="strengthsList" class="space-y-2 text-sm text-slate-300">
+              <!-- Populated by JS -->
+            </ul>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2 text-orange-400">
+              <i data-lucide="alert-circle" class="w-5 h-5"></i>
+              Areas to Improve
+            </h3>
+            <ul id="weaknessesList" class="space-y-2 text-sm text-slate-300">
+              <!-- Populated by JS -->
+            </ul>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2 text-purple-400">
+              <i data-lucide="lightbulb" class="w-5 h-5"></i>
+              Suggestions
+            </h3>
+            <ul id="suggestionsList" class="space-y-2 text-sm text-slate-300">
+              <!-- Populated by JS -->
+            </ul>
+          </div>
+          
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2 text-cyan-400">
+              <i data-lucide="bookmark" class="w-5 h-5"></i>
+              Improvement Tips
+            </h3>
+            <ul id="tipsList" class="space-y-2 text-sm text-slate-300">
+              <!-- Populated by JS -->
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-3 justify-center">
+          <button onclick="App.exportPDF()" class="btn-primary flex items-center gap-2">
+            <i data-lucide="download" class="w-4 h-4"></i> Download PDF Report
+          </button>
+          <button onclick="App.goTo('setup')" class="btn-secondary flex items-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i> New Interview
+          </button>
+          <button onclick="App.goTo('landing')" class="btn-secondary flex items-center gap-2">
+            <i data-lucide="home" class="w-4 h-4"></i> Home
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ AUTH MODAL ============ -->
+<div id="authModal" class="modal-backdrop">
+  <div class="glass-strong rounded-3xl p-8 max-w-md w-full">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold gradient-text" id="authTitle">Sign In</h2>
+      <button onclick="App.closeAuth()" class="p-2 hover:bg-slate-700 rounded-lg">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold mb-2 block">Email</label>
+        <input type="email" id="authEmail" class="w-full glass rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="you@example.com" />
+      </div>
+      <div>
+        <label class="text-sm font-semibold mb-2 block">Password</label>
+        <input type="password" id="authPassword" class="w-full glass rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••" />
+      </div>
+      <button onclick="App.handleAuth()" class="btn-primary w-full" id="authSubmit">Sign In</button>
+      <div class="text-center text-sm text-slate-400">
+        <span id="authSwitchText">Don't have an account?</span>
+        <button onclick="App.toggleAuthMode()" class="text-indigo-400 hover:underline ml-1" id="authSwitchBtn">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === SIMPLIFIED SAFE INIT ===
+(function() {
+  // Hide loading screen
+  function hideLoader() {
+    const ls = document.getElementById('loadingScreen');
+    if (ls) {
+      ls.style.transition = 'opacity 0.5s';
+      ls.style.opacity = '0';
+      setTimeout(() => ls.style.display = 'none', 600);
+    }
+  }
+  
+  // Init Three.js background
+  try {
+    const canvas = document.getElementById('bgCanvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(1500 * 3);
+    for (let i = 0; i < 1500 * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const mat = new THREE.PointsMaterial({ color: 0x6366f1, size: 0.05, transparent: true, opacity: 0.7 });
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      points.rotation.x += 0.001;
+      points.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+    
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  } catch(e) { console.log('BG error:', e); }
+  
+  // Show landing page immediately
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('landingPage').classList.add('active');
+  
+  // Hero animations
+  setTimeout(() => {
+    const elements = ['heroLogo', 'heroTitle', 'heroSubtitle', 'heroDesc', 'heroCta', 'heroStats'];
+    elements.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'all 0.6s ease ' + (i * 0.15) + 's';
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 100);
+      }
+    });
+  }, 200);
+  
+  // Typed text
+  if (typeof Typed !== 'undefined') {
+    new Typed('#typedText', {
+      strings: ['Practice interviews with AI.', 'Get instant feedback.', 'Build your confidence.', 'Land your dream job.'],
+      typeSpeed: 50,
+      backSpeed: 30,
+      backDelay: 2000,
+      loop: true
+    });
+  }
+  
+  // Nav fade in
+  setTimeout(() => {
+    const nav = document.getElementById('mainNav');
+    if (nav) { nav.style.transition = 'opacity 0.5s'; nav.style.opacity = '1'; }
+  }, 1000);
+  
+  // Hide loader
+  setTimeout(hideLoader, 800);
+  
+  // Safety: force hide after 2s
+  setTimeout(hideLoader, 2000);
+  
+  // Lucide icons
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+})();
+
+// Page navigation
+function goToPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(page + 'Page');
+  if (target) target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Setup wizard
+let setupStep = 1;
+function goToStep(step) {
+  document.querySelectorAll('.setup-step').forEach(s => s.classList.add('hidden'));
+  const target = document.getElementById('step' + step);
+  if (target) target.classList.remove('hidden');
+  
+  document.querySelectorAll('.step-circle').forEach((c, i) => {
+    c.classList.remove('active', 'completed');
+    if (i + 1 === step) c.classList.add('active');
+    else if (i + 1 < step) c.classList.add('completed');
+  });
+  
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  const start = document.getElementById('startBtn');
+  if (prev) prev.classList.toggle('hidden', step === 1);
+  if (next) next.classList.toggle('hidden', step === 7);
+  if (start) start.classList.toggle('hidden', step !== 7);
+}
+
+function nextStep() { if (setupStep < 7) { setupStep++; goToStep(setupStep); } }
+function prevStep() { if (setupStep > 1) { setupStep--; goToStep(setupStep); } }
+
+function selectOption(el) {
+  el.parentElement.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function startInterview() { goToPage('interview'); }
+</script>
+
+
+</body>
+</html>
