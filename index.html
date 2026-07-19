@@ -471,7 +471,7 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <div class="flex items-center gap-2 cursor-pointer" onclick="App.goTo('landing')">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="goTo('landing')">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center glow-indigo">
             <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
           </div>
@@ -488,8 +488,8 @@ input[type="range"]::-webkit-slider-thumb {
         
         <!-- Auth Buttons -->
         <div class="flex items-center gap-3">
-          <button id="authBtn" class="btn-secondary text-sm py-2 px-4">Sign In</button>
-          <button onclick="App.goTo('setup')" class="btn-primary text-sm py-2 px-4 hidden sm:block">Start Free</button>
+          <button id="authBtn" onclick="showAuth()" class="btn-secondary text-sm py-2 px-4">Sign In</button>
+          <button onclick="goTo('setup')" class="btn-primary text-sm py-2 px-4 hidden sm:block">Start Free</button>
         </div>
       </div>
     </div>
@@ -566,11 +566,11 @@ input[type="range"]::-webkit-slider-thumb {
         
         <!-- CTA Buttons -->
         <div id="heroCta" class="flex flex-col sm:flex-row gap-4 justify-center mb-12 opacity-0">
-          <button onclick="App.goTo('setup')" class="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
+          <button onclick="goTo('setup')" class="btn-primary text-lg px-8 py-4 flex items-center justify-center gap-2">
             <span>Start Interview Now</span>
             <i data-lucide="arrow-right" class="w-5 h-5"></i>
           </button>
-          <button onclick="App.playDemo()" class="btn-secondary text-lg px-8 py-4 flex items-center justify-center gap-2">
+          <button onclick="playDemo()" class="btn-secondary text-lg px-8 py-4 flex items-center justify-center gap-2">
             <i data-lucide="play-circle" class="w-5 h-5"></i>
             <span>Watch Demo</span>
           </button>
@@ -807,7 +807,7 @@ input[type="range"]::-webkit-slider-thumb {
               <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Basic avatars</li>
               <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Standard reports</li>
             </ul>
-            <button onclick="App.goTo('setup')" class="btn-secondary w-full">Get Started</button>
+            <button onclick="goTo('setup')" class="btn-secondary w-full">Get Started</button>
           </div>
           
           <!-- Pro -->
@@ -821,7 +821,7 @@ input[type="range"]::-webkit-slider-thumb {
               <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Advanced analytics</li>
               <li class="flex items-center gap-2 text-sm"><i data-lucide="check" class="w-4 h-4 text-green-400"></i>Resume parsing</li>
             </ul>
-            <button onclick="App.goTo('setup')" class="btn-primary w-full">Start Pro</button>
+            <button onclick="goTo('setup')" class="btn-primary w-full">Start Pro</button>
           </div>
           
           <!-- Enterprise -->
@@ -970,7 +970,7 @@ input[type="range"]::-webkit-slider-thumb {
                   <span>Slow</span><span>Normal</span><span>Fast</span>
                 </div>
               </div>
-              <button onclick="App.testVoice()" class="btn-secondary flex items-center gap-2">
+              <button onclick="testVoice()" class="btn-secondary flex items-center gap-2">
                 <i data-lucide="volume-2" class="w-4 h-4"></i> Test Voice
               </button>
             </div>
@@ -997,7 +997,7 @@ input[type="range"]::-webkit-slider-thumb {
               <div>
                 <label class="text-sm font-semibold mb-2 block">Resume / CV</label>
                 <div class="glass-light rounded-2xl p-6 border-2 border-dashed border-slate-600 hover:border-indigo-500 transition cursor-pointer" onclick="document.getElementById('resumeInput').click()">
-                  <input type="file" id="resumeInput" accept=".pdf,.docx,.txt" class="hidden" onchange="App.handleFileUpload('resume', this.files[0])" />
+                  <input type="file" id="resumeInput" accept=".pdf,.docx,.txt" class="hidden" onchange="handleFileUpload('resume', this.files[0])" />
                   <div class="text-center">
                     <i data-lucide="file-text" class="w-10 h-10 mx-auto mb-2 text-indigo-400"></i>
                     <div class="text-sm font-semibold" id="resumeFileName">Click to upload</div>
@@ -1010,7 +1010,7 @@ input[type="range"]::-webkit-slider-thumb {
               <div>
                 <label class="text-sm font-semibold mb-2 block">Job Description</label>
                 <div class="glass-light rounded-2xl p-6 border-2 border-dashed border-slate-600 hover:border-indigo-500 transition cursor-pointer" onclick="document.getElementById('jdInput').click()">
-                  <input type="file" id="jdInput" accept=".pdf,.docx,.txt" class="hidden" onchange="App.handleFileUpload('jd', this.files[0])" />
+                  <input type="file" id="jdInput" accept=".pdf,.docx,.txt" class="hidden" onchange="handleFileUpload('jd', this.files[0])" />
                   <div class="text-center">
                     <i data-lucide="briefcase" class="w-10 h-10 mx-auto mb-2 text-purple-400"></i>
                     <div class="text-sm font-semibold" id="jdFileName">Click to upload</div>
@@ -1028,14 +1028,14 @@ input[type="range"]::-webkit-slider-thumb {
           
           <!-- Navigation Buttons -->
           <div class="flex justify-between mt-8 pt-6 border-t border-slate-700">
-            <button id="prevBtn" onclick="App.prevStep()" class="btn-secondary flex items-center gap-2 hidden">
+            <button id="prevBtn" onclick="prevStep()" class="btn-secondary flex items-center gap-2 hidden">
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
             </button>
             <div class="ml-auto flex gap-3">
-              <button id="nextBtn" onclick="App.nextStep()" class="btn-primary flex items-center gap-2">
+              <button id="nextBtn" onclick="nextStep()" class="btn-primary flex items-center gap-2">
                 Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
-              <button id="startBtn" onclick="App.startInterview()" class="btn-primary flex items-center gap-2 hidden">
+              <button id="startBtn" onclick="startInterview()" class="btn-primary flex items-center gap-2 hidden">
                 <i data-lucide="play" class="w-4 h-4"></i> Start Interview
               </button>
             </div>
@@ -1072,10 +1072,10 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
         
         <div class="flex items-center gap-2">
-          <button onclick="App.togglePause()" class="p-2 glass-light rounded-lg hover:bg-slate-700" data-tooltip="Pause">
+          <button onclick="togglePause()" class="p-2 glass-light rounded-lg hover:bg-slate-700" data-tooltip="Pause">
             <i data-lucide="pause" class="w-4 h-4"></i>
           </button>
-          <button onclick="App.endInterview()" class="px-3 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 text-sm font-semibold">
+          <button onclick="endInterview()" class="px-3 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 text-sm font-semibold">
             End Interview
           </button>
         </div>
@@ -1145,22 +1145,22 @@ input[type="range"]::-webkit-slider-thumb {
           <!-- Controls -->
           <div class="glass rounded-2xl p-4">
             <div class="flex items-center justify-center gap-3 flex-wrap">
-              <button onclick="App.toggleMic()" id="micBtn" class="w-12 h-12 rounded-full glass-light hover:bg-slate-700 flex items-center justify-center" data-tooltip="Microphone">
+              <button onclick="toggleMic()" id="micBtn" class="w-12 h-12 rounded-full glass-light hover:bg-slate-700 flex items-center justify-center" data-tooltip="Microphone">
                 <i data-lucide="mic" class="w-5 h-5"></i>
               </button>
-              <button onclick="App.toggleCamera()" id="camBtn" class="w-12 h-12 rounded-full glass-light hover:bg-slate-700 flex items-center justify-center" data-tooltip="Camera">
+              <button onclick="toggleCamera()" id="camBtn" class="w-12 h-12 rounded-full glass-light hover:bg-slate-700 flex items-center justify-center" data-tooltip="Camera">
                 <i data-lucide="video" class="w-5 h-5"></i>
               </button>
-              <button onclick="App.skipQuestion()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Skip Question">
+              <button onclick="skipQuestion()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Skip Question">
                 Skip <i data-lucide="skip-forward" class="w-4 h-4 inline"></i>
               </button>
-              <button onclick="App.repeatQuestion()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Repeat">
+              <button onclick="repeatQuestion()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Repeat">
                 <i data-lucide="rotate-ccw" class="w-4 h-4 inline"></i> Repeat
               </button>
-              <button onclick="App.toggleTextInput()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Type Answer">
+              <button onclick="toggleTextInput()" class="px-4 py-2 glass-light rounded-full hover:bg-slate-700 text-sm" data-tooltip="Type Answer">
                 <i data-lucide="keyboard" class="w-4 h-4 inline"></i> Type
               </button>
-              <button onclick="App.endInterview()" class="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center" data-tooltip="End Interview">
+              <button onclick="endInterview()" class="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center" data-tooltip="End Interview">
                 <i data-lucide="phone-off" class="w-5 h-5"></i>
               </button>
             </div>
@@ -1168,7 +1168,7 @@ input[type="range"]::-webkit-slider-thumb {
             <!-- Text Input (Hidden) -->
             <div id="textInputArea" class="hidden mt-3 flex gap-2">
               <input type="text" id="textAnswerInput" placeholder="Type your answer..." class="flex-1 glass rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-              <button onclick="App.sendTextAnswer()" class="btn-primary">Send</button>
+              <button onclick="sendTextAnswer()" class="btn-primary">Send</button>
             </div>
           </div>
         </div>
@@ -1364,13 +1364,13 @@ input[type="range"]::-webkit-slider-thumb {
         
         <!-- Action Buttons -->
         <div class="flex flex-wrap gap-3 justify-center">
-          <button onclick="App.exportPDF()" class="btn-primary flex items-center gap-2">
+          <button onclick="exportPDF()" class="btn-primary flex items-center gap-2">
             <i data-lucide="download" class="w-4 h-4"></i> Download PDF Report
           </button>
-          <button onclick="App.goTo('setup')" class="btn-secondary flex items-center gap-2">
+          <button onclick="goTo('setup')" class="btn-secondary flex items-center gap-2">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i> New Interview
           </button>
-          <button onclick="App.goTo('landing')" class="btn-secondary flex items-center gap-2">
+          <button onclick="goTo('landing')" class="btn-secondary flex items-center gap-2">
             <i data-lucide="home" class="w-4 h-4"></i> Home
           </button>
         </div>
@@ -1385,7 +1385,7 @@ input[type="range"]::-webkit-slider-thumb {
   <div class="glass-strong rounded-3xl p-8 max-w-md w-full">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-bold gradient-text" id="authTitle">Sign In</h2>
-      <button onclick="App.closeAuth()" class="p-2 hover:bg-slate-700 rounded-lg">
+      <button onclick="closeAuth()" class="p-2 hover:bg-slate-700 rounded-lg">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
     </div>
@@ -1399,118 +1399,272 @@ input[type="range"]::-webkit-slider-thumb {
         <label class="text-sm font-semibold mb-2 block">Password</label>
         <input type="password" id="authPassword" class="w-full glass rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••" />
       </div>
-      <button onclick="App.handleAuth()" class="btn-primary w-full" id="authSubmit">Sign In</button>
+      <button onclick="handleAuth()" class="btn-primary w-full" id="authSubmit">Sign In</button>
       <div class="text-center text-sm text-slate-400">
         <span id="authSwitchText">Don't have an account?</span>
-        <button onclick="App.toggleAuthMode()" class="text-indigo-400 hover:underline ml-1" id="authSwitchBtn">Sign Up</button>
+        <button onclick="toggleAuthMode()" class="text-indigo-400 hover:underline ml-1" id="authSwitchBtn">Sign Up</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// === SIMPLIFIED SAFE INIT ===
-(function() {
-  // Hide loading screen
-  function hideLoader() {
-    const ls = document.getElementById('loadingScreen');
-    if (ls) {
-      ls.style.transition = 'opacity 0.5s';
-      ls.style.opacity = '0';
-      setTimeout(() => ls.style.display = 'none', 600);
-    }
-  }
-  
-  // Init Three.js background
-  try {
-    const canvas = document.getElementById('bgCanvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(1500 * 3);
-    for (let i = 0; i < 1500 * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const mat = new THREE.PointsMaterial({ color: 0x6366f1, size: 0.05, transparent: true, opacity: 0.7 });
-    const points = new THREE.Points(geo, mat);
-    scene.add(points);
-    
-    function animate() {
-      requestAnimationFrame(animate);
-      points.rotation.x += 0.001;
-      points.rotation.y += 0.001;
-      renderer.render(scene, camera);
-    }
-    animate();
-    
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  } catch(e) { console.log('BG error:', e); }
-  
-  // Show landing page immediately
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('landingPage').classList.add('active');
-  
-  // Hero animations
-  setTimeout(() => {
-    const elements = ['heroLogo', 'heroTitle', 'heroSubtitle', 'heroDesc', 'heroCta', 'heroStats'];
-    elements.forEach((id, i) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease ' + (i * 0.15) + 's';
-        setTimeout(() => {
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 100);
-      }
-    });
-  }, 200);
-  
-  // Typed text
-  if (typeof Typed !== 'undefined') {
-    new Typed('#typedText', {
-      strings: ['Practice interviews with AI.', 'Get instant feedback.', 'Build your confidence.', 'Land your dream job.'],
-      typeSpeed: 50,
-      backSpeed: 30,
-      backDelay: 2000,
-      loop: true
-    });
-  }
-  
-  // Nav fade in
-  setTimeout(() => {
-    const nav = document.getElementById('mainNav');
-    if (nav) { nav.style.transition = 'opacity 0.5s'; nav.style.opacity = '1'; }
-  }, 1000);
-  
-  // Hide loader
-  setTimeout(hideLoader, 800);
-  
-  // Safety: force hide after 2s
-  setTimeout(hideLoader, 2000);
-  
-  // Lucide icons
-  if (typeof lucide !== 'undefined') lucide.createIcons();
-})();
+// ============================================================
+// AURORA AI - WORKING PROTOTYPE
+// ============================================================
 
-// Page navigation
-function goToPage(page) {
+// State
+const State = {
+  currentPage: 'landing',
+  setupStep: 1,
+  selectedType: null,
+  selectedDifficulty: null,
+  selectedPersonality: null,
+  selectedAvatar: null,
+  voice: { type: 'female', accent: 'american', speed: 1 },
+  duration: 10,
+  resume: '',
+  jobDescription: '',
+  interview: {
+    active: false,
+    elapsed: 0,
+    currentQuestion: 1,
+    totalQuestions: 10,
+    messages: [],
+    scores: { communication: 0, grammar: 0, vocabulary: 0, leadership: 0, technical: 0, confidence: 0, eyeContact: 0 }
+  },
+  timer: null,
+  stream: null
+};
+
+// ============================================================
+// DATA
+// ============================================================
+const Types = [
+  { id: 'job', name: 'Job Interview', icon: 'briefcase', color: 'from-indigo-500 to-purple-600' },
+  { id: 'hr', name: 'HR Interview', icon: 'users', color: 'from-pink-500 to-rose-600' },
+  { id: 'technical', name: 'Technical', icon: 'code', color: 'from-cyan-500 to-blue-600' },
+  { id: 'behavioral', name: 'Behavioral', icon: 'activity', color: 'from-emerald-500 to-teal-600' },
+  { id: 'startup', name: 'Startup', icon: 'rocket', color: 'from-amber-500 to-orange-600' },
+  { id: 'government', name: 'Government', icon: 'building', color: 'from-slate-500 to-gray-600' },
+  { id: 'college', name: 'College Admission', icon: 'graduation-cap', color: 'from-violet-500 to-fuchsia-600' },
+  { id: 'school', name: 'School Viva', icon: 'book-open', color: 'from-lime-500 to-green-600' },
+  { id: 'presentation', name: 'Presentation', icon: 'presentation', color: 'from-red-500 to-pink-600' },
+  { id: 'public', name: 'Public Speaking', icon: 'megaphone', color: 'from-yellow-500 to-amber-600' },
+  { id: 'mock', name: 'Mock Interview', icon: 'clipboard', color: 'from-blue-500 to-indigo-600' },
+  { id: 'custom', name: 'Custom', icon: 'settings', color: 'from-fuchsia-500 to-purple-600' }
+];
+
+const Difficulties = [
+  { id: 'easy', name: 'Easy', desc: 'Friendly & supportive', color: 'from-green-500 to-emerald-600', icon: 'smile' },
+  { id: 'moderate', name: 'Moderate', desc: 'Balanced challenge', color: 'from-blue-500 to-cyan-600', icon: 'meh' },
+  { id: 'hard', name: 'Hard', desc: 'Rigorous & demanding', color: 'from-orange-500 to-red-600', icon: 'frown' },
+  { id: 'expert', name: 'Expert', desc: 'Industry-grade depth', color: 'from-purple-500 to-pink-600', icon: 'flame' }
+];
+
+const Personalities = [
+  { id: 'friendly', name: 'Friendly', icon: 'smile', color: 'from-yellow-400 to-orange-500' },
+  { id: 'professional', name: 'Professional', icon: 'briefcase', color: 'from-blue-500 to-indigo-600' },
+  { id: 'strict', name: 'Strict', icon: 'shield', color: 'from-red-500 to-rose-600' },
+  { id: 'technical', name: 'Technical Expert', icon: 'cpu', color: 'from-cyan-500 to-blue-600' },
+  { id: 'ceo', name: 'CEO', icon: 'crown', color: 'from-amber-500 to-yellow-600' },
+  { id: 'professor', name: 'Professor', icon: 'book-open', color: 'from-violet-500 to-purple-600' },
+  { id: 'govt', name: 'Govt Officer', icon: 'building', color: 'from-slate-500 to-gray-600' },
+  { id: 'military', name: 'Military Officer', icon: 'shield-alert', color: 'from-green-700 to-emerald-800' },
+  { id: 'investor', name: 'Investor', icon: 'trending-up', color: 'from-emerald-500 to-teal-600' },
+  { id: 'coach', name: 'Supportive Coach', icon: 'heart-handshake', color: 'from-pink-500 to-rose-600' },
+  { id: 'stress', name: 'Stress Interviewer', icon: 'zap', color: 'from-red-600 to-orange-700' }
+];
+
+const Avatars = [
+  { id: 'male_hr', name: 'James Wilson', role: 'Male HR', emoji: '👨‍💼', desc: 'Experienced HR Manager', color: 'from-blue-500 to-indigo-600' },
+  { id: 'female_hr', name: 'Sarah Johnson', role: 'Female HR', emoji: '👩‍💼', desc: 'Senior Recruiter', color: 'from-pink-500 to-rose-600' },
+  { id: 'senior_manager', name: 'David Chen', role: 'Senior Manager', emoji: '👨‍💻', desc: 'Engineering Director', color: 'from-cyan-500 to-blue-600' },
+  { id: 'professor', name: 'Dr. Emily Roberts', role: 'Professor', emoji: '👩‍🏫', desc: 'Academic Expert', color: 'from-violet-500 to-purple-600' },
+  { id: 'businesswoman', name: 'Lisa Anderson', role: 'Businesswoman', emoji: '👩‍💼', desc: 'Fortune 500 Executive', color: 'from-amber-500 to-orange-600' },
+  { id: 'engineer', name: 'Mike Peterson', role: 'Engineer', emoji: '👨‍🔬', desc: 'Tech Lead', color: 'from-emerald-500 to-teal-600' },
+  { id: 'robot', name: 'ARIA-X', role: 'AI Robot', emoji: '🤖', desc: 'Next-Gen AI', color: 'from-indigo-500 to-cyan-600' },
+  { id: 'military', name: 'Col. Anderson', role: 'Military Officer', emoji: '🪖', desc: 'Strict & Disciplined', color: 'from-green-700 to-emerald-800' }
+];
+
+const VoiceTypes = [
+  { id: 'male', name: 'Male', icon: 'user' },
+  { id: 'female', name: 'Female', icon: 'user-circle' },
+  { id: 'neutral', name: 'Neutral', icon: 'users' }
+];
+
+const Accents = [
+  { id: 'american', name: 'American', flag: '🇺🇸' },
+  { id: 'british', name: 'British', flag: '🇬🇧' },
+  { id: 'indian', name: 'Indian', flag: '🇮🇳' },
+  { id: 'australian', name: 'Australian', flag: '🇦🇺' },
+  { id: 'canadian', name: 'Canadian', flag: '🇨🇦' }
+];
+
+const Durations = [5, 10, 15, 20, 30, 45, 60];
+
+const Questions = {
+  job: ["Tell me about yourself and your background.", "Why are you interested in this position?", "What are your greatest strengths?", "Describe a challenging situation you handled at work.", "Where do you see yourself in 5 years?", "Why should we hire you?", "Tell me about a time you demonstrated leadership.", "What is your biggest professional achievement?", "How do you handle conflict with coworkers?", "What are your salary expectations?", "Do you have any questions for us?", "What motivates you in your work?", "Describe your ideal work environment.", "How do you stay updated in your field?"],
+  hr: ["Walk me through your resume.", "Why did you leave your last job?", "What do you know about our company?", "How do you handle stress and pressure?", "Describe your work style.", "What are your weaknesses?", "How do you prioritize your work?", "Tell me about a time you went above and beyond.", "What kind of management style do you prefer?", "How do you deal with difficult customers?"],
+  technical: ["Explain the difference between let, const, and var in JavaScript.", "What is the time complexity of binary search?", "How would you design a URL shortener?", "Explain the concept of closures.", "What is the difference between SQL and NoSQL databases?", "How do you handle memory leaks?", "Describe the CAP theorem.", "What are microservices?", "How would you optimize a slow query?", "Explain RESTful API design."],
+  behavioral: ["Tell me about a time you failed.", "Describe a situation where you had to work with a difficult team member.", "Give an example of when you showed initiative.", "Tell me about a time you had to meet a tight deadline.", "Describe a time you had to learn something quickly.", "Tell me about a time you disagreed with your manager.", "Give an example of a goal you achieved.", "Describe a time you went outside your comfort zone."],
+  startup: ["What excites you about startups?", "How do you handle ambiguity?", "Tell me about a time you wore many hats.", "How do you prioritize when everything is urgent?", "What's your approach to rapid prototyping?", "How would you grow this product from 0 to 1?"],
+  government: ["Why do you want to work in government?", "How do you handle bureaucratic processes?", "Describe your understanding of public policy.", "How would you handle media scrutiny?", "What does public service mean to you?"],
+  college: ["Why did you choose this college?", "What are your academic goals?", "Tell me about a project you're proud of.", "How do you handle academic pressure?", "Where do you see yourself after graduation?"],
+  school: ["Tell me about your favorite subject.", "What do you want to become?", "Describe your study habits.", "How do you manage your time?", "What are your hobbies?"],
+  presentation: ["Tell me about the topic of your presentation.", "Who is your target audience?", "What is the key message?", "How will you structure your presentation?", "How will you engage the audience?"],
+  public: ["What is the topic of your speech?", "Who is your audience?", "What message do you want to convey?", "How will you open your speech?", "How will you handle nervousness?"],
+  mock: ["Tell me about yourself.", "What are your strengths and weaknesses?", "Why do you want this job?", "Where do you see yourself in 5 years?", "Do you have any questions for me?"],
+  custom: ["Tell me about yourself.", "What are you looking for in this opportunity?", "What can you bring to the table?", "How do you handle challenges?", "What are your long-term goals?"]
+};
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const target = document.getElementById(page + 'Page');
-  if (target) target.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (target) {
+    target.classList.add('active');
+    State.currentPage = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    console.error('Page not found:', page);
+  }
 }
 
-// Setup wizard
-let setupStep = 1;
+// ============================================================
+// SETUP WIZARD
+// ============================================================
+function renderSetup() {
+  // Type grid
+  const typeGrid = document.getElementById('typeGrid');
+  if (typeGrid) {
+    typeGrid.innerHTML = Types.map(t => `
+      <div class="selection-card glass-light rounded-2xl p-4 text-center" onclick="selectType('${t.id}', this)">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br ${t.color} flex items-center justify-center mb-3">
+          <i data-lucide="${t.icon}" class="w-6 h-6 text-white"></i>
+        </div>
+        <div class="text-sm font-semibold">${t.name}</div>
+      </div>
+    `).join('');
+  }
+  
+  // Difficulty grid
+  const diffGrid = document.getElementById('difficultyGrid');
+  if (diffGrid) {
+    diffGrid.innerHTML = Difficulties.map(d => `
+      <div class="selection-card glass-light rounded-2xl p-5 text-center" onclick="selectDifficulty('${d.id}', this)">
+        <div class="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br ${d.color} flex items-center justify-center mb-3">
+          <i data-lucide="${d.icon}" class="w-7 h-7 text-white"></i>
+        </div>
+        <div class="text-lg font-bold mb-1">${d.name}</div>
+        <div class="text-xs text-slate-400">${d.desc}</div>
+      </div>
+    `).join('');
+  }
+  
+  // Personality grid
+  const persGrid = document.getElementById('personalityGrid');
+  if (persGrid) {
+    persGrid.innerHTML = Personalities.map(p => `
+      <div class="selection-card glass-light rounded-2xl p-4 text-center" onclick="selectPersonality('${p.id}', this)">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br ${p.color} flex items-center justify-center mb-3">
+          <i data-lucide="${p.icon}" class="w-6 h-6 text-white"></i>
+        </div>
+        <div class="text-sm font-semibold">${p.name}</div>
+      </div>
+    `).join('');
+  }
+  
+  // Avatar grid
+  const avatarGrid = document.getElementById('avatarGrid');
+  if (avatarGrid) {
+    avatarGrid.innerHTML = Avatars.map(a => `
+      <div class="selection-card glass-light rounded-2xl p-4 text-center" onclick="selectAvatar('${a.id}', this)">
+        <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br ${a.color} flex items-center justify-center text-3xl mb-3">
+          ${a.emoji}
+        </div>
+        <div class="text-sm font-bold">${a.name}</div>
+        <div class="text-xs text-indigo-300 mb-1">${a.role}</div>
+        <div class="text-xs text-slate-400">${a.desc}</div>
+      </div>
+    `).join('');
+  }
+  
+  // Voice type grid
+  const voiceTypeGrid = document.getElementById('voiceTypeGrid');
+  if (voiceTypeGrid) {
+    voiceTypeGrid.innerHTML = VoiceTypes.map(v => `
+      <div class="selection-card glass-light rounded-xl p-3 text-center" onclick="selectVoice('type', '${v.id}', this)">
+        <i data-lucide="${v.icon}" class="w-5 h-5 mx-auto mb-1"></i>
+        <div class="text-sm font-semibold">${v.name}</div>
+      </div>
+    `).join('');
+  }
+  
+  // Accent grid
+  const accentGrid = document.getElementById('accentGrid');
+  if (accentGrid) {
+    accentGrid.innerHTML = Accents.map(a => `
+      <div class="selection-card glass-light rounded-xl p-3 text-center" onclick="selectVoice('accent', '${a.id}', this)">
+        <div class="text-2xl mb-1">${a.flag}</div>
+        <div class="text-sm font-semibold">${a.name}</div>
+      </div>
+    `).join('');
+  }
+  
+  // Duration grid
+  const durGrid = document.getElementById('durationGrid');
+  if (durGrid) {
+    durGrid.innerHTML = Durations.map(d => `
+      <div class="selection-card glass-light rounded-xl p-3 text-center" onclick="selectDuration(${d}, this)">
+        <div class="text-2xl font-bold">${d}</div>
+        <div class="text-xs text-slate-400">min</div>
+      </div>
+    `).join('');
+  }
+  
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function selectType(id, el) {
+  State.selectedType = id;
+  markSelected(el);
+}
+
+function selectDifficulty(id, el) {
+  State.selectedDifficulty = id;
+  markSelected(el);
+}
+
+function selectPersonality(id, el) {
+  State.selectedPersonality = id;
+  markSelected(el);
+}
+
+function selectAvatar(id, el) {
+  State.selectedAvatar = id;
+  markSelected(el);
+}
+
+function selectVoice(type, id, el) {
+  State.voice[type] = id;
+  markSelected(el);
+}
+
+function selectDuration(d, el) {
+  State.duration = d;
+  markSelected(el);
+  const custom = document.getElementById('customDuration');
+  if (custom) custom.value = '';
+}
+
+function markSelected(el) {
+  el.parentElement.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
 function goToStep(step) {
   document.querySelectorAll('.setup-step').forEach(s => s.classList.add('hidden'));
   const target = document.getElementById('step' + step);
@@ -1528,18 +1682,647 @@ function goToStep(step) {
   if (prev) prev.classList.toggle('hidden', step === 1);
   if (next) next.classList.toggle('hidden', step === 7);
   if (start) start.classList.toggle('hidden', step !== 7);
+  
+  State.setupStep = step;
 }
 
-function nextStep() { if (setupStep < 7) { setupStep++; goToStep(setupStep); } }
-function prevStep() { if (setupStep > 1) { setupStep--; goToStep(setupStep); } }
-
-function selectOption(el) {
-  el.parentElement.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
+function nextStep() {
+  if (State.setupStep < 7) goToStep(State.setupStep + 1);
 }
 
-function startInterview() { goToPage('interview'); }
+function prevStep() {
+  if (State.setupStep > 1) goToStep(State.setupStep - 1);
+}
+
+// ============================================================
+// SPEECH
+// ============================================================
+const Speech = {
+  recognition: null,
+  isListening: false,
+  silenceTimer: null,
+  
+  init() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      this.recognition = new SR();
+      this.recognition.continuous = true;
+      this.recognition.interimResults = true;
+      this.recognition.lang = 'en-US';
+    }
+  },
+  
+  speak(text, onEnd) {
+    if (!('speechSynthesis' in window)) {
+      if (onEnd) setTimeout(onEnd, 1500);
+      return;
+    }
+    
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1;
+    utter.pitch = 1;
+    utter.volume = 1;
+    utter.onend = () => { if (onEnd) onEnd(); };
+    window.speechSynthesis.speak(utter);
+  },
+  
+  startListening(onResult) {
+    if (!this.recognition) {
+      // Fallback: text-only mode
+      this.showTextInput(onResult);
+      return;
+    }
+    
+    this.isListening = true;
+    let finalTranscript = '';
+    
+    this.recognition.onresult = (event) => {
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const t = event.results[i][0].transcript;
+        if (event.results[i].isFinal) finalTranscript += t;
+        else interim += t;
+      }
+      
+      if (onResult) onResult(finalTranscript || interim, !finalTranscript);
+      
+      if (this.silenceTimer) clearTimeout(this.silenceTimer);
+      this.silenceTimer = setTimeout(() => {
+        if (finalTranscript) this.stopListening(() => onResult(finalTranscript, false));
+      }, 1500);
+    };
+    
+    this.recognition.onerror = (e) => {
+      console.warn('Speech error:', e.error);
+      if (e.error === 'not-allowed') this.showTextInput(onResult);
+    };
+    
+    try {
+      this.recognition.start();
+    } catch(e) {}
+  },
+  
+  stopListening(callback) {
+    this.isListening = false;
+    if (this.silenceTimer) clearTimeout(this.silenceTimer);
+    if (this.recognition) {
+      try { this.recognition.stop(); } catch(e) {}
+    }
+    if (callback) callback();
+  },
+  
+  showTextInput(onSubmit) {
+    const area = document.getElementById('textInputArea');
+    if (area) {
+      area.classList.remove('hidden');
+      const input = document.getElementById('textAnswerInput');
+      if (input) {
+        input.focus();
+        input.onkeypress = (e) => {
+          if (e.key === 'Enter' && input.value.trim()) {
+            onSubmit(input.value.trim(), false);
+            input.value = '';
+            area.classList.add('hidden');
+          }
+        };
+      }
+    }
+  }
+};
+
+// ============================================================
+// INTERVIEW
+// ============================================================
+async function startInterview() {
+  const custom = document.getElementById('customDuration');
+  if (custom && custom.value) State.duration = parseInt(custom.value);
+  
+  const customText = document.getElementById('customText');
+  if (customText && customText.value && !State.resume) State.resume = customText.value;
+  
+  State.interview.totalQuestions = Math.max(5, Math.min(15, Math.floor(State.duration / 1.5)));
+  State.interview.currentQuestion = 1;
+  State.interview.messages = [];
+  
+  goTo('interview');
+  await initInterview();
+}
+
+async function initInterview() {
+  // Update UI
+  const typeName = Types.find(t => t.id === State.selectedType)?.name || 'Interview';
+  const typeEl = document.getElementById('interviewType');
+  if (typeEl) typeEl.textContent = typeName;
+  
+  const totalQ = document.getElementById('totalQuestions');
+  if (totalQ) totalQ.textContent = State.interview.totalQuestions;
+  
+  // Set avatar
+  const avatar = Avatars.find(a => a.id === State.selectedAvatar) || Avatars[0];
+  const aiIcon = document.getElementById('aiAvatarIcon');
+  if (aiIcon) aiIcon.textContent = avatar.emoji;
+  
+  const aiName = document.getElementById('aiName');
+  if (aiName) aiName.textContent = avatar.name;
+  
+  const aiNameTop = document.getElementById('aiNameTop');
+  if (aiNameTop) aiNameTop.textContent = avatar.name;
+  
+  // Start camera
+  await startCamera();
+  
+  // Start timer
+  startTimer();
+  
+  // Add intro message
+  addTranscript('system', `Interview started with ${avatar.name}. Type: ${typeName}`);
+  
+  // Ask first question after 1.5s
+  setTimeout(() => askNextQuestion(), 1500);
+}
+
+async function startCamera() {
+  try {
+    State.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    const video = document.getElementById('userVideo');
+    if (video) video.srcObject = State.stream;
+  } catch (e) {
+    console.warn('Camera not available');
+  }
+}
+
+function startTimer() {
+  if (State.timer) clearInterval(State.timer);
+  State.timer = setInterval(() => {
+    State.interview.elapsed++;
+    const mins = Math.floor(State.interview.elapsed / 60).toString().padStart(2, '0');
+    const secs = (State.interview.elapsed % 60).toString().padStart(2, '0');
+    const display = document.getElementById('timerDisplay');
+    if (display) display.textContent = `${mins}:${secs}`;
+    
+    if (State.interview.elapsed >= State.duration * 60) endInterview();
+  }, 1000);
+}
+
+function askNextQuestion() {
+  const type = State.selectedType || 'job';
+  const questionList = Questions[type] || Questions.job;
+  const qIndex = (State.interview.currentQuestion - 1) % questionList.length;
+  const question = questionList[qIndex];
+  
+  const status = document.getElementById('aiStatus');
+  if (status) status.textContent = 'Speaking...';
+  
+  addTranscript('ai', question);
+  State.interview.messages.push({ role: 'ai', content: question });
+  
+  Speech.speak(question, () => {
+    if (status) status.textContent = 'Listening...';
+    Speech.startListening((transcript, isInterim) => {
+      if (!isInterim && transcript.length > 2) {
+        handleUserAnswer(transcript);
+      } else if (isInterim) {
+        showInterim(transcript);
+      }
+    });
+  });
+}
+
+function showInterim(text) {
+  let interim = document.getElementById('interimMsg');
+  const area = document.getElementById('transcriptArea');
+  if (!area) return;
+  
+  if (!interim) {
+    interim = document.createElement('div');
+    interim.id = 'interimMsg';
+    interim.className = 'flex gap-2 justify-end';
+    interim.innerHTML = `<div class="max-w-[80%] rounded-2xl px-3 py-2 text-sm bg-slate-700/50 text-slate-300 italic">${text}...</div><div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center flex-shrink-0 text-xs">YOU</div>`;
+    area.appendChild(interim);
+  } else {
+    interim.querySelector('div').textContent = text + '...';
+  }
+  area.scrollTop = area.scrollHeight;
+}
+
+function addTranscript(type, text) {
+  const area = document.getElementById('transcriptArea');
+  if (!area) return;
+  
+  if (area.querySelector('.text-center.text-slate-500')) area.innerHTML = '';
+  
+  const msg = document.createElement('div');
+  msg.className = `transcript-message flex gap-2 ${type === 'ai' ? 'justify-start' : type === 'user' ? 'justify-end' : 'justify-center'}`;
+  
+  if (type === 'ai') {
+    msg.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 text-xs">AI</div><div class="max-w-[80%] rounded-2xl px-3 py-2 text-sm bg-indigo-500/20 text-indigo-100">${text}</div>`;
+  } else if (type === 'user') {
+    msg.innerHTML = `<div class="max-w-[80%] rounded-2xl px-3 py-2 text-sm bg-slate-700 text-slate-100">${text}</div><div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center flex-shrink-0 text-xs">YOU</div>`;
+  } else {
+    msg.innerHTML = `<div class="bg-slate-800 text-slate-400 text-xs px-3 py-1 rounded-full">${text}</div>`;
+  }
+  
+  area.appendChild(msg);
+  area.scrollTop = area.scrollHeight;
+}
+
+function handleUserAnswer(transcript) {
+  // Remove interim
+  const interim = document.getElementById('interimMsg');
+  if (interim) interim.remove();
+  
+  Speech.stopListening();
+  addTranscript('user', transcript);
+  State.interview.messages.push({ role: 'user', content: transcript });
+  
+  // Update scores (mock)
+  updateScores(transcript);
+  
+  // Next question
+  State.interview.currentQuestion++;
+  const qNum = document.getElementById('questionNum');
+  if (qNum) qNum.textContent = Math.min(State.interview.currentQuestion, State.interview.totalQuestions);
+  
+  if (State.interview.currentQuestion > State.interview.totalQuestions) {
+    setTimeout(() => endInterview(), 2000);
+  } else {
+    setTimeout(() => askNextQuestion(), 1500);
+  }
+}
+
+function updateScores(answer) {
+  const words = answer.split(' ').length;
+  const s = State.interview.scores;
+  
+  s.communication = Math.round(((s.communication || 70) + Math.min(95, 50 + words * 1.2)) / 2);
+  s.grammar = Math.round(((s.grammar || 75) + 75 + Math.random() * 20) / 2);
+  s.vocabulary = Math.round(((s.vocabulary || 70) + 70 + Math.random() * 25) / 2);
+  s.confidence = Math.round(((s.confidence || 70) + 70 + Math.random() * 25) / 2);
+  s.leadership = Math.round(60 + Math.random() * 35);
+  s.technical = Math.round(55 + Math.random() * 40);
+  s.eyeContact = Math.round(70 + Math.random() * 25);
+  
+  const cVal = document.getElementById('confidenceVal');
+  const cBar = document.getElementById('confidenceBar');
+  if (cVal) cVal.textContent = s.communication + '%';
+  if (cBar) cBar.style.width = s.communication + '%';
+  
+  const gVal = document.getElementById('grammarVal');
+  const gBar = document.getElementById('grammarBar');
+  if (gVal) gVal.textContent = s.grammar + '%';
+  if (gBar) gBar.style.width = s.grammar + '%';
+  
+  const speedVal = document.getElementById('speedVal');
+  if (speedVal) speedVal.textContent = Math.round(120 + Math.random() * 40) + ' WPM';
+  
+  const eyeVal = document.getElementById('eyeContactValue');
+  if (eyeVal) eyeVal.textContent = s.eyeContact + '%';
+  
+  // Emotions
+  const setEmotion = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = Math.round(val) + '%';
+  };
+  setEmotion('emotionHappyVal', 60 + Math.random() * 35);
+  setEmotion('emotionNeutralVal', 40 + Math.random() * 40);
+  setEmotion('emotionSurprisedVal', Math.random() * 20);
+  setEmotion('emotionSadVal', Math.random() * 15);
+  
+  // Overall
+  const overall = Math.round(s.communication * 0.2 + s.grammar * 0.15 + s.vocabulary * 0.15 + s.leadership * 0.15 + s.technical * 0.2 + s.confidence * 0.1 + s.eyeContact * 0.05);
+  const oScore = document.getElementById('overallScore');
+  const lScore = document.getElementById('liveScore');
+  if (oScore) oScore.textContent = overall;
+  if (lScore) lScore.textContent = overall;
+}
+
+function toggleMic() {
+  const btn = document.getElementById('micBtn');
+  if (Speech.isListening) {
+    Speech.stopListening();
+    if (btn) btn.classList.add('bg-red-500/20');
+    const ms = document.getElementById('micStatus');
+    if (ms) ms.textContent = '● Muted';
+  } else {
+    Speech.startListening(() => {});
+    if (btn) btn.classList.remove('bg-red-500/20');
+    const ms = document.getElementById('micStatus');
+    if (ms) ms.textContent = '● Active';
+  }
+}
+
+function toggleCamera() {
+  if (State.stream) {
+    const track = State.stream.getVideoTracks()[0];
+    if (track) {
+      track.enabled = !track.enabled;
+    }
+  }
+}
+
+function togglePause() {
+  if (State.timer) {
+    clearInterval(State.timer);
+    State.timer = null;
+    window.speechSynthesis.cancel();
+    showToast('Interview paused', 'info');
+  } else {
+    startTimer();
+    showToast('Interview resumed', 'success');
+  }
+}
+
+function skipQuestion() {
+  window.speechSynthesis.cancel();
+  Speech.stopListening();
+  State.interview.currentQuestion++;
+  const qNum = document.getElementById('questionNum');
+  if (qNum) qNum.textContent = Math.min(State.interview.currentQuestion, State.interview.totalQuestions);
+  if (State.interview.currentQuestion > State.interview.totalQuestions) {
+    endInterview();
+  } else {
+    setTimeout(() => askNextQuestion(), 500);
+  }
+}
+
+function repeatQuestion() {
+  const lastAi = [...State.interview.messages].reverse().find(m => m.role === 'ai');
+  if (lastAi) Speech.speak(lastAi.content);
+}
+
+function toggleTextInput() {
+  const area = document.getElementById('textInputArea');
+  if (area) area.classList.toggle('hidden');
+}
+
+function sendTextAnswer() {
+  const input = document.getElementById('textAnswerInput');
+  if (input && input.value.trim()) {
+    handleUserAnswer(input.value.trim());
+    input.value = '';
+    const area = document.getElementById('textInputArea');
+    if (area) area.classList.add('hidden');
+  }
+}
+
+function endInterview() {
+  State.interview.active = false;
+  if (State.timer) clearInterval(State.timer);
+  window.speechSynthesis.cancel();
+  Speech.stopListening();
+  if (State.stream) State.stream.getTracks().forEach(t => t.stop());
+  
+  generateReport();
+  goTo('report');
+}
+
+function generateReport() {
+  const scores = State.interview.scores;
+  Object.keys(scores).forEach(k => { if (!scores[k]) scores[k] = 70 + Math.floor(Math.random() * 20); });
+  
+  const weights = { communication: 0.2, grammar: 0.15, vocabulary: 0.15, leadership: 0.15, technical: 0.2, confidence: 0.1, eyeContact: 0.05 };
+  let total = 0;
+  Object.keys(weights).forEach(k => total += (scores[k] || 70) * weights[k]);
+  const finalScore = Math.round(total);
+  
+  const fs = document.getElementById('finalScore');
+  if (fs) fs.textContent = finalScore;
+  
+  // Render lists
+  const strengths = ['Clear and articulate communication', 'Good use of professional vocabulary', 'Demonstrated strong problem-solving', 'Maintained good engagement'];
+  const weaknesses = ['Could provide more specific metrics', 'Some filler words used', 'Could elaborate on technical depth'];
+  const suggestions = ['Use the STAR method for behavioral questions', 'Quantify achievements with numbers', 'Practice active listening'];
+  const tips = ['Research the company before interviews', 'Prepare 3-5 strong stories', 'Get adequate rest before interview day'];
+  
+  const renderList = (id, items, icon, color) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = items.map(item => `<li class="flex items-start gap-2"><i data-lucide="${icon}" class="w-4 h-4 text-${color}-400 mt-0.5 flex-shrink-0"></i><span>${item}</span></li>`).join('');
+  };
+  
+  renderList('strengthsList', strengths, 'check', 'green');
+  renderList('weaknessesList', weaknesses, 'alert-triangle', 'orange');
+  renderList('suggestionsList', suggestions, 'lightbulb', 'yellow');
+  renderList('tipsList', tips, 'star', 'cyan');
+  
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  
+  // Render charts
+  if (typeof Chart !== 'undefined') {
+    renderCharts(scores);
+  }
+}
+
+function renderCharts(scores) {
+  // Radar
+  const radarCtx = document.getElementById('scoreRadar');
+  if (radarCtx) {
+    new Chart(radarCtx, {
+      type: 'radar',
+      data: {
+        labels: ['Communication', 'Grammar', 'Vocabulary', 'Leadership', 'Technical', 'Confidence', 'Eye Contact'],
+        datasets: [{
+          label: 'Score',
+          data: ['communication', 'grammar', 'vocabulary', 'leadership', 'technical', 'confidence', 'eyeContact'].map(k => scores[k] || 70),
+          backgroundColor: 'rgba(99, 102, 241, 0.3)',
+          borderColor: 'rgba(99, 102, 241, 1)',
+          borderWidth: 2,
+          pointBackgroundColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { r: { beginAtZero: true, max: 100, ticks: { color: '#94a3b8', backdropColor: 'transparent' }, grid: { color: 'rgba(148, 163, 184, 0.2)' }, pointLabels: { color: '#cbd5e1' } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+  
+  // Bar
+  const barCtx = document.getElementById('performanceBar');
+  if (barCtx) {
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Communication', 'Grammar', 'Vocabulary', 'Leadership', 'Technical', 'Confidence'],
+        datasets: [{ data: ['communication', 'grammar', 'vocabulary', 'leadership', 'technical', 'confidence'].map(k => scores[k] || 70), backgroundColor: ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'], borderRadius: 8 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        scales: { x: { beginAtZero: true, max: 100, grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94a3b8' } }, y: { grid: { display: false }, ticks: { color: '#cbd5e1' } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+  
+  // Line
+  const lineCtx = document.getElementById('progressLine');
+  if (lineCtx) {
+    new Chart(lineCtx, {
+      type: 'line',
+      data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8'],
+        datasets: [{ data: [65, 70, 68, 75, 78, 82, 85, 88], borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.2)', fill: true, tension: 0.4 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { color: '#cbd5e1' } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+}
+
+function exportPDF() {
+  showToast('PDF export coming soon!', 'info');
+}
+
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `fixed top-20 right-4 z-50 px-4 py-3 rounded-xl glass-strong text-sm font-semibold`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function playDemo() {
+  showToast('Try a live interview instead!', 'info');
+  setTimeout(() => goTo('setup'), 1000);
+}
+
+function handleFileUpload(type) {
+  showToast('File upload parsed (demo mode)', 'success');
+}
+
+function testVoice() {
+  Speech.speak("Hello! I'm your AI interviewer. Let's begin!");
+}
+
+function showAuth() { 
+  const m = document.getElementById('authModal');
+  if (m) m.classList.add('active');
+}
+function closeAuth() { 
+  const m = document.getElementById('authModal');
+  if (m) m.classList.remove('active');
+}
+function toggleAuthMode() {
+  showToast('Auth mode toggled', 'info');
+}
+function handleAuth() {
+  showToast('Authentication requires Firebase config', 'info');
+  closeAuth();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  // Hide loading screen
+  setTimeout(() => {
+    const ls = document.getElementById('loadingScreen');
+    if (ls) {
+      ls.style.transition = 'opacity 0.5s';
+      ls.style.opacity = '0';
+      setTimeout(() => ls.style.display = 'none', 500);
+    }
+  }, 800);
+  
+  // Three.js background
+  try {
+    const canvas = document.getElementById('bgCanvas');
+    if (canvas && typeof THREE !== 'undefined') {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      
+      const geo = new THREE.BufferGeometry();
+      const positions = new Float32Array(1500 * 3);
+      for (let i = 0; i < 1500 * 3; i++) positions[i] = (Math.random() - 0.5) * 20;
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const mat = new THREE.PointsMaterial({ color: 0x6366f1, size: 0.05, transparent: true, opacity: 0.7 });
+      const points = new THREE.Points(geo, mat);
+      scene.add(points);
+      
+      function animate() {
+        requestAnimationFrame(animate);
+        points.rotation.x += 0.001;
+        points.rotation.y += 0.001;
+        renderer.render(scene, camera);
+      }
+      animate();
+      
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+  } catch(e) { console.log('BG init error:', e); }
+  
+  // Render setup grids
+  renderSetup();
+  
+  // Init speech
+  Speech.init();
+  
+  // Hero animations
+  setTimeout(() => {
+    const elements = ['heroLogo', 'heroTitle', 'heroSubtitle', 'heroDesc', 'heroCta', 'heroStats'];
+    elements.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = `all 0.6s ease ${i * 0.15}s`;
+        setTimeout(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 100);
+      }
+    });
+  }, 200);
+  
+  // Typed text
+  if (typeof Typed !== 'undefined') {
+    try {
+      new Typed('#typedText', {
+        strings: ['Practice interviews with AI.', 'Get instant feedback.', 'Build your confidence.', 'Land your dream job.'],
+        typeSpeed: 50,
+        backSpeed: 30,
+        backDelay: 2000,
+        loop: true
+      });
+    } catch(e) {}
+  }
+  
+  // Nav fade in
+  setTimeout(() => {
+    const nav = document.getElementById('mainNav');
+    if (nav) { nav.style.transition = 'opacity 0.5s'; nav.style.opacity = '1'; }
+  }, 1000);
+  
+  // Lucide icons
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  
+  // Show landing page
+  goTo('landing');
+}
+
+// Start
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
+
 
 
 </body>
